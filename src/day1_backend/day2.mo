@@ -204,32 +204,35 @@ actor {
   //Write a function sum_of_array that takes an array [Nat] and returns the sum of a values in the array.
   //Note : Do not use a loop.
   public func sum_of_array(arr : [Nat]) : async Nat{
-    return Array.foldLeft<Nat, Nat>(arr, 0, func(n, m){
-      return n + m;
-    });
+    return Array.foldLeft<Nat, Nat>(arr, 0 ,func(x: Nat, y:Nat): Nat{x+y})
   };
   //Write a function squared_array that takes an array [Nat] and returns a new array where each value has been squared.
   //Note : Do not use a loop.
   public func squared_array(arr : [Nat]) : async [Nat]{
-    return Array.map<Nat, Nat>(arr, func(n){
-      return n ** 2;
-    });
+    return Array.map<Nat,Nat>(
+      arr,
+      func(x: Nat){Nat.pow(x,2)}
+    )
   };
   //Write a function increase_by_index that takes an array [Nat] and returns a new array where each number has been increased by it's corresponding index.
   //Note : increase_by_index [1, 4, 8, 0] -> [1 + 0, 4 + 1 , 8 + 2 , 0 + 3] = [1,5,10,3]
   //Note 2 : Do not use a loop.
   public func increase_by_index(arr : [Nat]) : async [Nat]{
-    return Array.mapEntries<Nat, Nat>(arr, func(n, index){
-      return n + index;
-    });
+    return Array.mapEntries<Nat,Nat>(
+      arr,
+      func(x: Nat, i:Nat){x+i}
+    )
   };
   //Write a higher order function contains<A> that takes 3 parameters : an array [A] , a of type A and a function f that takes a tuple of type (A,A) and returns a boolean.
   //This function should return a boolean indicating whether or not a is present in the array.
   //For example, contains([1,2,3], 2, (a,b) => a == b) should return true.
   public func contains<A>(arr : [A], a : A, f : (A, A) -> Bool) : Bool{
-    return Array.foldLeft<A, Bool>(arr, false, func(n, m){
-      if(f(m,a)) return true;
-      return n;
-    });
+    let array = Array.thaw<A>(arr);
+    for(value in array.vals()){
+      if(f(value, a)){
+        return true;
+      };
+    };
+    return false;
   };
 };
